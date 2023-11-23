@@ -1,3 +1,1 @@
-navegue até \services e rode o comando
-
-mockgen -source=C:\Users\erons\Golang\gomocks\services\services.go -destination=mock_todolist_service/mock_todolist_service.go -package=mock_todolist_service
+PS C:\Users\erons\Golang\gomocks> mockgen -source=C:\Users\erons\Golang\gomocks\services\services.go -destination=C:\Users\erons\Golang\gomocks\mocks\mocks.go -package=mocks
