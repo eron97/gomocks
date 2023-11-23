@@ -2,8 +2,9 @@ package services
 
 import (
 	"context"
-	"database/sql"
 	"log"
+
+	"github.com/eron97/gomocks.git/database/mysql"
 )
 
 type TodoListService interface {
@@ -11,7 +12,7 @@ type TodoListService interface {
 }
 
 type MyTodoListService struct {
-	DB *sql.DB
+	DBConnector mysql.DBConnector
 }
 
 type TodoItem struct {
@@ -21,7 +22,12 @@ type TodoItem struct {
 }
 
 func (s *MyTodoListService) GetTodoList(ctx context.Context) ([]TodoItem, error) {
-	db := s.DB // ponteiro que carrega conexão com banco de dados
+	db, err := s.DBConnector.Connect()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM tasks")
 	if err != nil {

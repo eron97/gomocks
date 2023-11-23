@@ -9,21 +9,22 @@ import (
 )
 
 func main() {
-
 	// Carrega credenciais do banco de dados
-	dbCredentials := &mysql.MySQLConnector{
+	dbConnector := &mysql.MySQLConnector{
 		Credentials: "admin:mysql-todolist@tcp(database-1.cpj0eavfzshu.us-east-1.rds.amazonaws.com:3306)/db_todolist",
 	}
 
 	// Conecta ao banco de dados
-	db, err := dbCredentials.Connect()
+	db, err := dbConnector.Connect()
 	if err != nil {
 		return
 	}
 
-	// Carrega ponteiro de conexão com db e inicia serviço de listagem de tarefas
+	dbConnector.Connect()
+
+	// Carrega uma instância do MySQLConnector como a implementação da interface DBConnector
 	todoListServices := &services.MyTodoListService{
-		DB: db,
+		DBConnector: dbConnector,
 	}
 
 	defer db.Close() // Garante que a conexão será fechada no final da função main
@@ -37,5 +38,4 @@ func main() {
 	router := routes.SetupRouter(todoListHandler)
 	// Inicia o servidor
 	router.Run(":8080")
-
 }
